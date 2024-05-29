@@ -13,19 +13,19 @@ struct ContentView: View {
                     ForEach(Songs.prefix(20)) { Song in
                         Button {
                             let Alert = UIAlertController(title: "Video ID", message: "Put in the YouTube video ID here.", preferredStyle: .alert)
-                            Alert.addTextField(configurationHandler: { (textField) -> Void in
-                                textField.text = GetVideoID(UIPasteboard.general.string ?? "")
-                                textField.placeholder = "Video ID"
+                            Alert.addTextField(configurationHandler: { (TextField) -> Void in
+                                TextField.text = GetVideoID(UIPasteboard.general.string ?? "")
+                                TextField.placeholder = "Video ID"
                             })
-                            Alert.addTextField(configurationHandler: { (textField) -> Void in
-                                textField.text = "0"
-                                textField.placeholder = "Start Time"
-                                textField.keyboardType = .numberPad
+                            Alert.addTextField(configurationHandler: { (TextField) -> Void in
+                                TextField.text = "0"
+                                TextField.placeholder = "Start Time"
+                                TextField.keyboardType = .numberPad
                             })
                             Alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                             Alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { [weak Alert] (action) -> Void in
-                                let Video = GetVideoID((Alert?.textFields![0] as UITextField).text ?? "")
-                                let StartTime = Double((Alert?.textFields![1] as UITextField).text ?? "0") ?? 0
+                                let Video = GetVideoID(((Alert?.textFields![0]!) as UITextField).text ?? "")
+                                let StartTime = Double(((Alert?.textFields![1]!) as UITextField).text ?? "0") ?? 0
                                 DispatchQueue.global(qos: .utility).async {
                                     ShowAlert(UIAlertController(title: "Creating \(Song.trackName)", message: "", preferredStyle: .alert))
                                     let Result = MakeSong(Song, Video, StartTime)

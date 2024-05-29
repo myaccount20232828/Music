@@ -26,10 +26,16 @@ struct ContentView: View {
                                 let Video = ((alert?.textFields![0])! as UITextField).text ?? ""
                                 let StartTime = Double(((alert?.textFields![1])! as UITextField).text ?? "0") ?? 0
                                 DispatchQueue.global(qos: .utility).async {
-                                    UIPasteboard.general.string = MakeSong(Song, Video, StartTime)
+                                    ShowLoadingAlert("Creating \(Song.trackName)")
+                                    let Result = MakeSong(Song, Video, StartTime)
+                                    Dismiss()
+                                    ShowAlert(UIAlertController(title: "Added \(Song.trackName)", message: "", preferredStyle: .alert), animated: true, completion: nil)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                                        Dismiss()
+                                    }
                                 }
                             }))
-                            UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.present(alert, animated: true)
+                            ShowAlert(alert)
                         } label: {
                             ZStack {
                                 Gray
@@ -100,6 +106,28 @@ struct ContentView: View {
                 Songs = SearchSongs(Search)
             }
         }
+    }
+}
+
+func ShowLoadingAlert(_ Title: String) {
+    let Alert = UIAlertController(title: Title, message: "", preferredStyle: .alert)
+    let ActivityIndicator = UIActivityIndicatorView(frame: CGRect(x: 5, y: 5, width: 50, height: 50))
+    ActivityIndicator.hidesWhenStopped = true
+    ActivityIndicator.style = .medium
+    ActivityIndicator.startAnimating()
+    Alert.view.addSubview(ActivityIndicator)
+    ShowAlert(Alert)
+}
+
+func ShowAlert(_ Alert: UIAlertController) {
+    DispatchQueue.main.async {
+        UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.present(Alert, animated: true)
+    }
+}
+
+func Dismiss(_ Alert: UIAlertController) {
+    DispatchQueue.main.async {
+        UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.dismiss(animated: true)
     }
 }
 

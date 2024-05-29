@@ -26,10 +26,10 @@ struct ContentView: View {
                                 let Video = ((alert?.textFields![0])! as UITextField).text ?? ""
                                 let StartTime = Double(((alert?.textFields![1])! as UITextField).text ?? "0") ?? 0
                                 DispatchQueue.global(qos: .utility).async {
-                                    ShowLoadingAlert("Creating \(Song.trackName)")
+                                    ShowAlert(UIAlertController(title: "Creating \(Song.trackName)", message: "", preferredStyle: .alert))
                                     let Result = MakeSong(Song, Video, StartTime)
                                     Dismiss()
-                                    ShowAlert(UIAlertController(title: Result == "Success" ? "Added \(Song.trackName)" : "Failed!", message: Result == "Success" ? "" : Result, preferredStyle: .alert), animated: true, completion: nil)
+                                    ShowAlert(UIAlertController(title: Result == "Success" ? "Added \(Song.trackName)" : "Failed!", message: Result == "Success" ? "" : Result, preferredStyle: .alert))
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                                         Dismiss()
                                     }
@@ -107,16 +107,6 @@ struct ContentView: View {
             }
         }
     }
-}
-
-func ShowLoadingAlert(_ Title: String) {
-    let Alert = UIAlertController(title: Title, message: "", preferredStyle: .alert)
-    let ActivityIndicator = UIActivityIndicatorView(frame: CGRect(x: 5, y: 5, width: 50, height: 50))
-    ActivityIndicator.hidesWhenStopped = true
-    ActivityIndicator.style = .medium
-    ActivityIndicator.startAnimating()
-    Alert.view.addSubview(ActivityIndicator)
-    ShowAlert(Alert)
 }
 
 func ShowAlert(_ Alert: UIAlertController) {

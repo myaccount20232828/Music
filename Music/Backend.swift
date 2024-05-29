@@ -1,4 +1,4 @@
-import Foundation
+import SwiftUI
 import AVKit
 
 func MakeSong(_ Song: MusicItem, _ VideoID: String, _ StartTime: Double) -> String {

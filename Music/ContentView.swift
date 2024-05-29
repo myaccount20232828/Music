@@ -4,6 +4,7 @@ import SDWebImageSwiftUI
 struct ContentView: View {
     @State var Songs: [MusicItem] = []
     @State var Search = ""
+    @State var DebounceCancellable: AnyCancellable? = nil
     var body: some View {
         ZStack {
             DarkGray
@@ -107,12 +108,17 @@ struct ContentView: View {
         .navigationBarBackButtonHidden(true)
         .searchable(text: $Search)
         .onChange(of: Search) { _ in
-            DispatchQueue.global(qos: .utility).async {
-                if Search.isEmpty {
-                    Songs = []
+            DebounceCancellable?.cancel()
+            DebounceCancellable = Just(Search)
+            .delay(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { _ in
+                DispatchQueue.global(qos: .utility).async {
+                    if Search.isEmpty {
+                        Songs = []
+                    }
+                    let NewSongs = SearchSongs(Search)
+                    Songs = NewSongs
                 }
-                let NewSongs = SearchSongs(Search)
-                Songs = NewSongs
             }
         }
     }

@@ -106,7 +106,8 @@ struct ContentView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .searchable(text: $Search) {
+        .searchable(text: $Search)
+        .onSubmit(of: .search) {
             if Search.isEmpty {
                 Songs = []
             } else {

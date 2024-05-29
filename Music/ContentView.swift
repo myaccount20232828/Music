@@ -7,6 +7,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             DarkGray
+               .edgesIgnoringSafeArea(.all)
             ScrollView(showsIndicators: false) {
                 VStack {
                     Spacer()
@@ -30,7 +31,7 @@ struct ContentView: View {
                                     ShowAlert(UIAlertController(title: "Creating \(Song.trackName)", message: "", preferredStyle: .alert))
                                     let Result = MakeSong(Song, Video, StartTime)
                                     if Result != "Success" {
-                                        sleep(1)
+                                        Thread.sleep(forTimeInterval: 0.5)
                                     }
                                     Dismiss()
                                     ShowAlert(UIAlertController(title: Result == "Success" ? "Added \(Song.trackName)" : "Failed!", message: Result == "Success" ? "" : Result, preferredStyle: .alert))

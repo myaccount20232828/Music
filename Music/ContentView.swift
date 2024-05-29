@@ -13,7 +13,11 @@ struct ContentView: View {
             ScrollView(showsIndicators: false) {
                 VStack {
                     Spacer()
-                    ForEach(Songs) { Song in
+                    ForEach(Songs.sorted(by: {
+    let score1 = $0.trackName.levenshteinDistanceScore(to: Search)
+    let score2 = $1.trackName.levenshteinDistanceScore(to: Search)
+    return score1 > score2
+})) { Song in
                         Button {
                             let Alert = UIAlertController(title: "Video ID", message: "Put in the YouTube Video ID here.", preferredStyle: .alert)
                             Alert.addTextField(configurationHandler: { (TextField) -> Void in
@@ -160,5 +164,35 @@ extension Color {
         } else {
             self = .clear
         }
+    }
+}
+
+extension String {
+    func levenshteinDistanceScore(to string: String, ignoreCase: Bool = true, trimWhiteSpacesAndNewLines: Bool = true) -> Double {
+        var firstString = self
+        var secondString = string
+        if ignoreCase {
+            firstString = firstString.lowercased()
+            secondString = secondString.lowercased()
+        }
+        if trimWhiteSpacesAndNewLines {
+            firstString = firstString.trimmingCharacters(in: .whitespacesAndNewlines)
+            secondString = secondString.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        let empty = [Int](repeating:0, count: secondString.count)
+        var last = [Int](0...secondString.count)
+        for (i, tLett) in firstString.enumerated() {
+            var cur = [i + 1] + empty
+            for (j, sLett) in secondString.enumerated() {
+                cur[j + 1] = tLett == sLett ? last[j] : Swift.min(last[j], last[j + 1], cur[j])+1
+            }
+            last = cur
+        }
+        // maximum string length between the two
+        let lowestScore = max(firstString.count, secondString.count)
+        if let validDistance = last.last {
+            return  1 - (Double(validDistance) / Double(lowestScore))
+        }
+        return 0.0
     }
 }

@@ -193,8 +193,8 @@ struct PlayerView: View {
             }
         }
         .onAppear {
-            AudioPlayer.shared.playSong(Info)
-            Player = AudioPlayer.shared.audioPlayer
+            MusicPlayer.shared.PlaySong(Info)
+            Player = MusicPlayer.shared.Player
             DurationFull = Player?.duration ?? 0
             CurrentDuration = Player?.currentTime ?? 0
             RemainingDuratation = DurationFull - CurrentDuration
@@ -215,7 +215,7 @@ struct PlayerView: View {
                         Gray
                             .frame(width: 65, height: 25)
                             .cornerRadius(12)
-                       Text("Back 2")
+                       Text("Back 3")
                             .font(.system(size: 16, weight: .semibold, design: .rounded))
                             .foregroundColor(Color.white)
                     }
@@ -295,7 +295,7 @@ class MusicPlayer {
         }
         UpdateNowPlayingInfo()
     }
-    func skipForward() {
+    func SkipForward() {
         guard let Player = Player else { return }
         var newTime = Player.currentTime + 10
         if newTime > Player.duration {
@@ -304,42 +304,42 @@ class MusicPlayer {
         Player.currentTime = newTime
         UpdateNowPlayingInfo()
     }
-    func skipBackward() {
+    func SkipBackward() {
         guard let Player = Player else { return }
         var newTime = Player.currentTime - 10
         if newTime < 0 {
             newTime = 0
         }
-        audioPlayer.currentTime = newTime
-        updateNowPlayingInfo()
+        Player.currentTime = newTime
+        UpdateNowPlayingInfo()
     }
-    func setupRemoteTransportControls() {
+    func SetupRemoteTransportControls() {
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.pauseCommand.addTarget { [weak self] event in
             guard let self = self else { return .commandFailed }
-            self.togglePlayback()
+            self.TogglePlayback()
             return .success
         }
         commandCenter.playCommand.addTarget { [weak self] event in
             guard let self = self else { return .commandFailed }
-            self.togglePlayback()
+            self.TogglePlayback()
             return .success
         }
         commandCenter.skipBackwardCommand.addTarget { [weak self] event in
             guard let self = self else { return .commandFailed }
-            self.skipBackward()
+            self.SkipBackward()
             return .success
         }
         commandCenter.skipForwardCommand.addTarget { [weak self] event in
             guard let self = self else { return .commandFailed }
-            self.skipForward()
+            self.SkipForward()
             return .success
         }
         commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
             guard let self = self, let event = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
             let newPositionTime = event.positionTime
-            self.audioPlayer?.currentTime = TimeInterval(newPositionTime)
-            self.updateNowPlayingInfo()
+            self.Player?.currentTime = TimeInterval(newPositionTime)
+            self.UpdateNowPlayingInfo()
             return .success
         }
     }

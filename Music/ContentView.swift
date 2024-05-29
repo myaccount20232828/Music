@@ -12,7 +12,7 @@ struct ContentView: View {
                     Spacer()
                     ForEach(Songs.prefix(20)) { Song in
                         Button {
-                            let Alert = UIAlertController(title: "Video ID", message: "Put in the YouTube video ID here.", preferredStyle: .alert)
+                            let Alert = UIAlertController(title: "Video ID", message: "Put in the YouTube Video ID here.", preferredStyle: .alert)
                             Alert.addTextField(configurationHandler: { (TextField) -> Void in
                                 TextField.text = GetVideoID(UIPasteboard.general.string ?? "")
                                 TextField.placeholder = "Video ID"
@@ -30,8 +30,7 @@ struct ContentView: View {
                                     ShowAlert(UIAlertController(title: "Creating \(Song.trackName)", message: "", preferredStyle: .alert))
                                     let Result = MakeSong(Song, Video, StartTime)
                                     if Result != "Success" {
-                                        UIPasteboard.general.string = Result
-                                        sleep(5)
+                                        sleep(1)
                                     }
                                     Dismiss()
                                     ShowAlert(UIAlertController(title: Result == "Success" ? "Added \(Song.trackName)" : "Failed!", message: Result == "Success" ? "" : Result, preferredStyle: .alert))

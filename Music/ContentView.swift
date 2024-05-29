@@ -29,7 +29,7 @@ struct ContentView: View {
                                     ShowLoadingAlert("Creating \(Song.trackName)")
                                     let Result = MakeSong(Song, Video, StartTime)
                                     Dismiss()
-                                    ShowAlert(UIAlertController(title: "Added \(Song.trackName)", message: "", preferredStyle: .alert), animated: true, completion: nil)
+                                    ShowAlert(UIAlertController(title: Result == "Success" ? "Added \(Song.trackName)" : "Failed!", message: Result == "Success" ? "" : Result, preferredStyle: .alert), animated: true, completion: nil)
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                                         Dismiss()
                                     }
@@ -125,7 +125,7 @@ func ShowAlert(_ Alert: UIAlertController) {
     }
 }
 
-func Dismiss(_ Alert: UIAlertController) {
+func Dismiss() {
     DispatchQueue.main.async {
         UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.dismiss(animated: true)
     }

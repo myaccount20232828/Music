@@ -50,7 +50,6 @@ func EncodeAudio(_ MetaData: [AVMetadataItem], _ URLString: String, _ StartTime:
         ExportSession.outputFileType = AVFileType.m4a
         ExportSession.outputURL = OutputURL
         ExportSession.metadata = MetaData
-        var ShouldWait = true
         print("Exporting...")
         let Semaphore = DispatchSemaphore(value: 0)
         ExportSession.exportAsynchronously {
@@ -59,7 +58,6 @@ func EncodeAudio(_ MetaData: [AVMetadataItem], _ URLString: String, _ StartTime:
             }
             guard case ExportSession.status = AVAssetExportSession.Status.completed else { return }
             print("Done!")
-            ShouldWait = false
         }
         Semaphore.wait()
         return "Success!"

@@ -230,83 +230,83 @@ struct PlayerView: View {
     }
 }
 
-class AudioPlayer {
-    var audioPlayer: AVAudioPlayer?
-    var nowPlayingInfo = [String: Any]()
-    var playbackTimer: Timer?
-    static let shared = AudioPlayer()
+class MusicPlayer {
+    var Player: AVAudioPlayer?
+    var NowPlayingInfo = [String: Any]()
+    var PlaybackTimer: Timer?
+    static let shared = MusicPlayer()
     init() {
-        setupAudioSession()
-        setupRemoteTransportControls()
+        SetupAudioSession()
+        SetupRemoteTransportControls()
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }
-    func playSong(_ Info: SongInfo) {
+    func PlaySong(_ Info: SongInfo) {
         do {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = [:]
-            audioPlayer?.stop()
+            Player?.stop()
             try audioPlayer = SoundPlayer(Info.FilePath)
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.play()
-            setupNowPlayingInfo(Info)
-            startPlaybackTimer()
+            Player?.prepareToPlay()
+            Player?.play()
+            SetupNowPlayingInfo(Info)
+            StartPlaybackTimer()
         } catch {
             print("Error playing audio: \(error.localizedDescription)")
         }
     }
-    func setupAudioSession() {
-        let audioSession = AVAudioSession.sharedInstance()
+    func SetupAudioSession() {
         do {
-            try audioSession.setCategory(.playback, mode: .default)
-            try audioSession.setActive(true)
+            let AudioSession = AVAudioSession.sharedInstance()
+            try AudioSession.setCategory(.playback, mode: .default)
+            try AudioSession.setActive(true)
         } catch {
             print("Error setting up audio session: \(error.localizedDescription)")
         }
     }
-    func setupNowPlayingInfo(_ Info: SongInfo) {
+    func SetupNowPlayingInfo(_ Info: SongInfo) {
         if let Title = Info.Title {
-            nowPlayingInfo[MPMediaItemPropertyTitle] = Title
+            NowPlayingInfo[MPMediaItemPropertyTitle] = Title
         }        
         if let Artist = Info.Artist {
-            nowPlayingInfo[MPMediaItemPropertyArtist] = Artist
+            NowPlayingInfo[MPMediaItemPropertyArtist] = Artist
         }
         if let Artwork = Info.Artwork {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: Artwork)
+            NowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: Artwork)
         }
-        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer?.duration ?? 0
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        NowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = Player?.duration ?? 0
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = NowPlayingInfo
     }
-    func startPlaybackTimer() {
-        playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+    func StartPlaybackTimer() {
+        PlaybackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            self.updateNowPlayingInfo()
+            self.UpdateNowPlayingInfo()
         }
     }
     func updateNowPlayingInfo() {
-        guard let audioPlayer = audioPlayer else { return }
-        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = audioPlayer.isPlaying ? 1.0 : 0.0
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        guard let Player = Player else { return }
+        NowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = Player.currentTime
+        NowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = Player.isPlaying ? 1.0 : 0.0
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = NowPlayingInfo
     }
-    func togglePlayback() {
-        if audioPlayer?.isPlaying ?? false {
-            audioPlayer?.pause()
+    func TogglePlayback() {
+        if Player?.isPlaying ?? false {
+            Player?.pause()
         } else {
-            audioPlayer?.play()
+            Player?.play()
         }
-        updateNowPlayingInfo()
+        UpdateNowPlayingInfo()
     }
     func skipForward() {
-        guard let audioPlayer = audioPlayer else { return }
-        var newTime = audioPlayer.currentTime + 10
-        if newTime > audioPlayer.duration {
-            newTime = audioPlayer.duration
+        guard let Player = Player else { return }
+        var newTime = Player.currentTime + 10
+        if newTime > Player.duration {
+            newTime = Player.duration
         }
-        audioPlayer.currentTime = newTime
-        updateNowPlayingInfo()
+        Player.currentTime = newTime
+        UpdateNowPlayingInfo()
     }
     func skipBackward() {
-        guard let audioPlayer = audioPlayer else { return }
-        var newTime = audioPlayer.currentTime - 10
+        guard let Player = Player else { return }
+        var newTime = Player.currentTime - 10
         if newTime < 0 {
             newTime = 0
         }

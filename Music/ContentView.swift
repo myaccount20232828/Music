@@ -281,7 +281,7 @@ class MusicPlayer {
             self.UpdateNowPlayingInfo()
         }
     }
-    func updateNowPlayingInfo() {
+    func UpdateNowPlayingInfo() {
         guard let Player = Player else { return }
         NowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = Player.currentTime
         NowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = Player.isPlaying ? 1.0 : 0.0

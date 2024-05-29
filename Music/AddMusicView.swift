@@ -2,9 +2,10 @@ import SwiftUI
 import SDWebImageSwiftUI
 import Combine
 
-struct ContentView: View {
+struct AddMusicView: View {
     @State var Songs: [MusicItem] = []
     @State var Search = ""
+    @Environment(\.presentationMode) var presentationMode
     var body: some View {
         ZStack {
             DarkGray
@@ -104,6 +105,25 @@ struct ContentView: View {
                     .foregroundColor(Color.white)
             }
         }
+        .navigationBarItems(
+            leading:
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    ZStack {
+                        Gray
+                            .frame(width: 65, height: 25)
+                            .cornerRadius(12)
+                       Text("Back")
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .foregroundColor(Color.white)
+                    }
+                }
+            ,
+            trailing:
+                Color.clear
+                .frame(width: 65, height: 25)
+        )
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .searchable(text: $Search)

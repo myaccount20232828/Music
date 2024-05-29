@@ -1,11 +1,11 @@
 import Foundation
 
-func GetSongInfo(_ TrackID: String) -> MusicItem? {
+func SearchSongs(_ Search: String) -> [MusicItem] {
     do {
-        return try JSONDecoder().decode(JSONResult.self, from: try Data(contentsOf: "https://itunes.apple.com/lookup?id=\(TrackID)&entity=musicTrack".encodedUrl()!)).results.first
+        return try JSONDecoder().decode(JSONResult.self, from: try Data(contentsOf: "https://itunes.apple.com/search?term=\(Search)&entity=musicTrack".encodedUrl()!)).results
     } catch {
         print(error)
-        return nil
+        return []
     }
 }
 

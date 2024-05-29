@@ -1,5 +1,6 @@
 import SwiftUI
 import AVKit
+import MediaPlayer
 
 struct ContentView: View {
     @State var Songs: [SongInfo] = []
@@ -274,8 +275,7 @@ class AudioPlayer {
             nowPlayingInfo[MPMediaItemPropertyArtist] = Artist
         }
         if let Artwork = Info.Artwork {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: artworkImage)
-
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: Artwork)
         }
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer?.duration ?? 0
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo

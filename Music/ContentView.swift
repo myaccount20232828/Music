@@ -48,7 +48,7 @@ struct ContentView: View {
                                             Color("Gray")
                                                 .frame(width: 67, height: 67)
                                                 .cornerRadius(12)
-                                            WebImage(URL(string: Song.artworkUrl100))
+                                            WebImage(url: URL(string: Song.artworkUrl100))
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fill)
                                                 .frame(width: 67, height: 67)

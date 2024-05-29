@@ -50,7 +50,7 @@ struct ContentView: View {
                                                 .font(.system(size: 20, weight: .bold, design: .rounded))
                                                 .lineLimit(2)
                                             Text(Song.Artist ?? "Unknown")
-                                                .foregroundColor(Color("Gray2"))
+                                                .foregroundColor(Gray2)
                                                 .font(.system(size: 18, weight: .bold, design: .rounded))
                                                 .lineLimit(1)
                                         }
@@ -117,7 +117,7 @@ struct PlayerView: View {
     @State var ShowAlbumName = false
     var body: some View {
         ZStack {
-            Color("DarkGray")
+            DarkGray
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 ZStack {
@@ -219,7 +219,7 @@ struct PlayerView: View {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
                     ZStack {
-                        Color("Gray")
+                        Gray
                             .frame(width: 65, height: 25)
                             .cornerRadius(12)
                        Text("Back")

@@ -150,3 +150,108 @@ extension String {
         return 0.0
     }
 }
+
+struct PlayButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+        .scaleEffect(configuration.isPressed ? 0.8 : 1)
+        .opacity(configuration.isPressed ? 0.5 : 1)
+        .animation(.easeIn.speed(1.5))
+    }
+}
+
+extension UINavigationController: UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+    
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
+}
+
+func GetSongs() -> [SongInfo] {
+    do {
+        var Songs: [SongInfo] = []
+        for Song in try FileManager.default.contentsOfDirectory(atPath: AppDataDir()).filter({$0.hasSuffix(".m4a")}) {
+            Songs.append(GetSongInfo("\(AppDataDir())/\(Song)"))
+        }
+        return Songs
+    } catch {
+        print(error)
+        return []
+    }
+}
+
+func GetSongInfo(_ FilePath: String) -> SongInfo {
+    let AVItems = AVPlayerItem(url: URL(fileURLWithPath: FilePath)).asset.commonMetadata
+    var Artwork: UIImage?
+    var Title: String?
+    var Artist: String?
+    var AlbumName: String?
+    for item in AVItems {
+        if item.commonKey == .commonKeyTitle {
+            Title = item.stringValue
+        }
+        if item.commonKey == .commonKeyArtist {
+            Artist = item.stringValue
+        }
+        if item.commonKey == .commonKeyArtwork {
+            Artwork = UIImage(data: item.value as! Data) ?? UIImage()
+        }
+        if item.commonKey == .commonKeyAlbumName {
+            AlbumName = item.stringValue
+        }
+    }
+    return SongInfo(Artwork: Artwork, Title: Title, Artist: Artist, AlbumName: AlbumName, FilePath: FilePath)
+}
+
+struct SongInfo: Hashable {
+    var Artwork: UIImage?
+    var Title: String?
+    var Artist: String?
+    var AlbumName: String?
+    var FilePath: String
+}
+
+func SoundPlayer(_ FilePath: String) -> AVAudioPlayer? {
+    var Player: AVAudioPlayer?
+    do {
+        Player = try AVAudioPlayer(data: FileManager.default.contents(atPath: FilePath)!)
+    } catch {
+        print(error)
+    }
+    return Player
+}
+
+func GetHoursMinutesSecondsFrom(seconds: Double) -> (hours: Int, minutes: Int, seconds: Int) {
+    let secs = Int(seconds)
+    let hours = secs / 3600
+    let minutes = (secs % 3600) / 60
+    let seconds = (secs % 3600) % 60
+    return (hours, minutes, seconds)
+}
+
+func FormatTimeFor(seconds: Double) -> String {
+    let result = GetHoursMinutesSecondsFrom(seconds: seconds)
+    let hoursString = "\(result.hours)"
+    let minutesString = "\(result.minutes)"
+    var secondsString = "\(result.seconds)"
+    if secondsString.count == 1 {
+        secondsString = "0\(result.seconds)"
+    }
+    var time = "\(hoursString):"
+    if result.hours >= 1 {
+        time.append("\(minutesString):\(secondsString)")
+    }
+    else {
+        time = "\(minutesString):\(secondsString)"
+    }
+    return time
+}
+
+func CalculatePercentage(one: Double, two: Double) -> Double {
+    let result = ((one)/two)*100
+    return (result * pow(10.0, Double(0))).rounded() / pow(10.0, Double(0))
+}

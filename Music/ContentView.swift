@@ -108,13 +108,8 @@ struct ContentView: View {
         .navigationBarBackButtonHidden(true)
         .searchable(text: $Search)
         .onSubmit(of: .search) {
-            if Search.isEmpty {
-                Songs = []
-            } else {
-                DispatchQueue.global(qos: .utility).async {
-                    let NewSongs = SearchSongs(Search)
-                    Songs = NewSongs
-                }
+            DispatchQueue.global(qos: .utility).async {
+                Songs = SearchSongs(Search)
             }
         }
         .onChange(of: Search) { _ in

@@ -4,6 +4,7 @@ import SDWebImageSwiftUI
 struct ContentView: View {
     @State var Songs: [MusicItem] = []
     @State var Search = ""
+    @State var Timer: Timer?
     var body: some View {
         ZStack {
             DarkGray
@@ -107,7 +108,14 @@ struct ContentView: View {
         .searchable(text: $Search)
         .onChange(of: Search) { _ in
             DispatchQueue.global(qos: .utility).async {
-                Songs = SearchSongs(Search)
+                if Search.isEmpty {
+                    Songs = []
+                }
+                Timer?.invalidate()
+                Timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                    let NewSongs = SearchSongs(Search)
+                    Songs = NewSongs
+                }
             }
         }
     }

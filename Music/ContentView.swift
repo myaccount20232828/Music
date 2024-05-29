@@ -114,7 +114,7 @@ struct ContentView: View {
                 Songs = []
             } else {
                 DebounceCancellable = Just(Search)
-                .delay(for: .milliseconds(500), scheduler: RunLoop.main)
+                .delay(for: .milliseconds(200), scheduler: RunLoop.main)
                 .sink { _ in
                     DispatchQueue.global(qos: .utility).async {
                         let NewSongs = SearchSongs(Search)

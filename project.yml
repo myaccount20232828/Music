@@ -1,0 +1,19 @@
+name: Music
+packages:
+  SDWebImageSwiftUI:
+    url: https://github.com/SDWebImage/SDWebImageSwiftUI
+    from: 2.2.6
+targets:
+  Music:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources: [Music, Resources]
+    dependencies:
+      - package: SDWebImageSwiftUI
+    settings:
+      base:
+        INFOPLIST_FILE: Resources/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.AppInstalleriOS.Music
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0

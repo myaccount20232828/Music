@@ -1,5 +1,6 @@
 import SwiftUI
 import SDWebImageSwiftUI
+import Combine
 
 struct ContentView: View {
     @State var Songs: [MusicItem] = []

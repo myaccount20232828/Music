@@ -39,8 +39,8 @@ func EncodeAudio(_ MetaData: [AVMetadataItem], _ URLString: String, _ StartTime:
         let Composition = AVMutableComposition()
         let Asset = AVURLAsset(url: URL(string: URLString)!)
         print("Creating Audio Asset Track...")
-        guard let AudioAssetTrack = Asset.tracks(withMediaType: AVMediaType.audio).first else { print("Can't get AudioAssetTrack!") return }
-        guard let AudioCompositionTrack = Composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) else { return }
+        guard let AudioAssetTrack = Asset.tracks(withMediaType: AVMediaType.audio).first else { return "Can't get AudioAssetTrack!" }
+        guard let AudioCompositionTrack = Composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) else { return "Unable to add track!" }
         try AudioCompositionTrack.insertTimeRange(CMTimeRange(start: CMTime(seconds: StartTime, preferredTimescale: AudioAssetTrack.naturalTimeScale), end: Asset.duration), of: AudioAssetTrack, at: CMTime.zero)
         let OutputURL = URL(fileURLWithPath: "\(AppDataDir())/\(SongName).m4a")
         if FileManager.default.fileExists(atPath: OutputURL.path) {

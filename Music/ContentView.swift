@@ -10,7 +10,9 @@ struct ContentView: View {
                     Text(Song.trackName)
                 }
             }
+            .searchable(text: $Search)
         }
+        .navigationViewStyle(.stack)
         .onChange(of: Search) { _ in
             DispatchQueue.global(qos: .utility).async {
                 Songs = SearchSongs(Search)

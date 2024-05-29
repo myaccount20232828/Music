@@ -126,6 +126,7 @@ struct AddMusicView: View {
         )
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
+        .navigationViewStyle(.stack)
         .searchable(text: $Search)
         .onSubmit(of: .search) {
             DispatchQueue.global(qos: .utility).async {
@@ -145,64 +146,3 @@ let Gray = Color(Hex: "161B22")
 let Gray2 = Color(Hex: "89929B")
 let LightGray = Color(Hex: "21262D")
 let AppColor = Color(Hex: "7950F2")
-
-func ShowAlert(_ Alert: UIAlertController) {
-    DispatchQueue.main.async {
-        UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.present(Alert, animated: true)
-    }
-}
-
-func Dismiss() {
-    DispatchQueue.main.async {
-        UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.dismiss(animated: true)
-    }
-}
-
-func GetVideoID(_ Video: String) -> String {
-    if Video.contains("youtu.be") {
-        return Video.components(separatedBy: "youtu.be/")[1].components(separatedBy: "?")[0]
-    } else {
-        return Video
-    }
-}
-
-extension Color {
-    init(Hex: String, Opacity: CGFloat = 1.0) {
-        let Hex = Hex.replacingOccurrences(of: "#", with: "")
-        if Hex.count == 6, let Red = Int(Hex.prefix(2), radix: 16), let Green = Int(Hex.prefix(4).suffix(2), radix: 16), let Blue = Int(Hex.suffix(2), radix: 16) {
-            self = Color(UIColor.init(red: CGFloat(Red) / 255, green: CGFloat(Green) / 255, blue: CGFloat(Blue) / 255, alpha: Opacity))
-        } else {
-            self = .clear
-        }
-    }
-}
-
-extension String {
-    func levenshteinDistanceScore(to string: String, ignoreCase: Bool = true, trimWhiteSpacesAndNewLines: Bool = true) -> Double {
-        var firstString = self
-        var secondString = string
-        if ignoreCase {
-            firstString = firstString.lowercased()
-            secondString = secondString.lowercased()
-        }
-        if trimWhiteSpacesAndNewLines {
-            firstString = firstString.trimmingCharacters(in: .whitespacesAndNewlines)
-            secondString = secondString.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-        let empty = [Int](repeating:0, count: secondString.count)
-        var last = [Int](0...secondString.count)
-        for (i, tLett) in firstString.enumerated() {
-            var cur = [i + 1] + empty
-            for (j, sLett) in secondString.enumerated() {
-                cur[j + 1] = tLett == sLett ? last[j] : Swift.min(last[j], last[j + 1], cur[j])+1
-            }
-            last = cur
-        }
-        // maximum string length between the two
-        let lowestScore = max(firstString.count, secondString.count)
-        if let validDistance = last.last {
-            return  1 - (Double(validDistance) / Double(lowestScore))
-        }
-        return 0.0
-    }
-}

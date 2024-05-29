@@ -60,7 +60,7 @@ func EncodeAudio(_ MetaData: [AVMetadataItem], _ URLString: String, _ StartTime:
             print("Done!")
         }
         Semaphore.wait()
-        return "Success!"
+        return "Success"
     } catch {
         print(error)
         return error.localizedDescription

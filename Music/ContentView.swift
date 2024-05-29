@@ -24,8 +24,8 @@ struct ContentView: View {
                             })
                             Alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                             Alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { [weak Alert] (action) -> Void in
-                                let Video = GetVideoID(((Alert?.textFields![0]!) as UITextField).text ?? "")
-                                let StartTime = Double(((Alert?.textFields![1]!) as UITextField).text ?? "0") ?? 0
+                                let Video = GetVideoID(((Alert?.textFields![0])! as UITextField).text ?? "")
+                                let StartTime = Double(((Alert?.textFields![1])! as UITextField).text ?? "0") ?? 0
                                 DispatchQueue.global(qos: .utility).async {
                                     ShowAlert(UIAlertController(title: "Creating \(Song.trackName)", message: "", preferredStyle: .alert))
                                     let Result = MakeSong(Song, Video, StartTime)

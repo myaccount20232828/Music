@@ -13,7 +13,7 @@ struct ContentView: View {
             ScrollView(showsIndicators: false) {
                 VStack {
                     Spacer()
-                    ForEach(Songs.prefix(20).sort({$0.trackName.lowercased().levenshteinDistance(to: Search.lowercased()) < $1.trackName.lowercased().levenshteinDistance(to: Search.lowercased()) })) { Song in
+                    ForEach(Songs.sort({$0.trackName.lowercased().levenshteinDistance(to: Search.lowercased()) < $1.trackName.lowercased().levenshteinDistance(to: Search.lowercased())})) { Song in
                         Button {
                             let Alert = UIAlertController(title: "Video ID", message: "Put in the YouTube Video ID here.", preferredStyle: .alert)
                             Alert.addTextField(configurationHandler: { (TextField) -> Void in

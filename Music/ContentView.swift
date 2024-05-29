@@ -201,8 +201,8 @@ struct PlayerView: View {
             } catch {
                 print(error)
             }
-            Player = SoundPlayer(Info.FilePath)
-            Player?.prepareToPlay()
+            AudioPlayer.shared.playSong(Info)
+            Player = AudioPlayer.shared.audioPlayer
             DurationFull = Player?.duration ?? 0
             CurrentDuration = Player?.currentTime ?? 0
             RemainingDuratation = DurationFull - CurrentDuration
@@ -242,6 +242,7 @@ class AudioPlayer {
     var audioPlayer: AVAudioPlayer?
     var nowPlayingInfo = [String: Any]()
     var playbackTimer: Timer?
+    static let shared = AudioPlayer()
     init() {
         setupAudioSession()
         setupRemoteTransportControls()

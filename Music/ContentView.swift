@@ -29,12 +29,12 @@ struct ContentView: View {
                                 DispatchQueue.global(qos: .utility).async {
                                     ShowAlert(UIAlertController(title: "Creating \(Song.trackName)", message: "", preferredStyle: .alert))
                                     let Result = MakeSong(Song, Video, StartTime)
-                                    Dismiss()
-                                    if Result == "Success" {
-                                        ShowAlert(UIAlertController(title: "Added \(Song.trackName)", message: "", preferredStyle: .alert))
-                                    } else {
-                                        ShowAlert(UIAlertController(title: "Failed!", message: "", preferredStyle: .alert))
+                                    if Result != "Success" {
+                                        UIPasteboard.general.string = Result
+                                        sleep(5)
                                     }
+                                    Dismiss()
+                                    ShowAlert(UIAlertController(title: Result == "Success" ? "Added \(Song.trackName)" : "Failed!", message: Result == "Success" ? "" : Result, preferredStyle: .alert))
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                                         Dismiss()
                                     }

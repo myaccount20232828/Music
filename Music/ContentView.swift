@@ -110,15 +110,16 @@ struct ContentView: View {
         .searchable(text: $Search)
         .onChange(of: Search) { _ in
             DebounceCancellable?.cancel()
-            DebounceCancellable = Just(Search)
-            .delay(for: .milliseconds(500), scheduler: RunLoop.main)
-            .sink { _ in
-                DispatchQueue.global(qos: .utility).async {
-                    if Search.isEmpty {
-                        Songs = []
+            if Search.isEmpty {
+                Songs = []
+            } else {
+                DebounceCancellable = Just(Search)
+                .delay(for: .milliseconds(500), scheduler: RunLoop.main)
+                .sink { _ in
+                    DispatchQueue.global(qos: .utility).async {
+                        let NewSongs = SearchSongs(Search)
+                        Songs = NewSongs
                     }
-                    let NewSongs = SearchSongs(Search)
-                    Songs = NewSongs
                 }
             }
         }

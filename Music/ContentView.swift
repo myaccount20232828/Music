@@ -6,7 +6,7 @@ struct ContentView: View {
     @State var Search = ""
     var body: some View {
         ZStack {
-            Color("DarkGray")
+            DarkGray
             ScrollView(showsIndicators: false) {
                 VStack {
                     Spacer()
@@ -25,17 +25,17 @@ struct ContentView: View {
                             UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.present(alert, animated: true)
                         } label: {
                             ZStack {
-                                Color("Gray")
+                                Gray
                                 HStack {
                                     if Song.artworkUrl100 == nil {
                                         ZStack {
-                                            Color("LightGray")
+                                            LightGray
                                                 .frame(width: 67, height: 67)
                                                 .cornerRadius(12)
-                                            Color("Gray")
+                                            Gray
                                                 .frame(width: 65, height: 65)
                                                 .cornerRadius(12)
-                                            Color("DarkGray")
+                                            DarkGray
                                                 .opacity(0.5)
                                                 .frame(width: 30, height: 30)
                                                 .clipShape(Circle())
@@ -45,7 +45,7 @@ struct ContentView: View {
                                         }
                                     } else {
                                         ZStack {
-                                            Color("Gray")
+                                            Gray
                                                 .frame(width: 67, height: 67)
                                                 .cornerRadius(12)
                                             WebImage(url: URL(string: Song.artworkUrl100))
@@ -60,7 +60,7 @@ struct ContentView: View {
                                             .font(.system(size: 20, weight: .bold, design: .rounded))
                                             .lineLimit(2)
                                         Text(Song.artistName)
-                                            .foregroundColor(Color("Gray2"))
+                                            .foregroundColor(Gray2)
                                             .font(.system(size: 18, weight: .bold, design: .rounded))
                                             .lineLimit(1)
                                     }
@@ -92,6 +92,23 @@ struct ContentView: View {
             DispatchQueue.global(qos: .utility).async {
                 Songs = SearchSongs(Search)
             }
+        }
+    }
+}
+
+let DarkGray = Color(Hex: "0D1117")
+let Gray = Color(Hex: "161B22")
+let Gray2 = Color(Hex: "89929B")
+let LightGray = Color(Hex: "21262D")
+let AppColor = Color(Hex: "7950F2")
+
+extension Color {
+    init(Hex: String, Opacity: CGFloat = 1.0) {
+        let Hex = Hex.replacingOccurrences(of: "#", with: "")
+        if Hex.count == 6, let Red = Int(Hex.prefix(2), radix: 16), let Green = Int(Hex.prefix(4).suffix(2), radix: 16), let Blue = Int(Hex.suffix(2), radix: 16) {
+            self = Color(UIColor.init(red: CGFloat(Red) / 255, green: CGFloat(Green) / 255, blue: CGFloat(Blue) / 255, alpha: Opacity))
+        } else {
+            self = .clear
         }
     }
 }

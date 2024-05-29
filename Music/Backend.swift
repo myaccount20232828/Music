@@ -1,13 +1,11 @@
 import Foundation
 import AVKit
 
-func MakeSong(_ Song: MusicItem, _ VideoID: String, _ StartTime: Double) {
-    print("Getting video URL...")
+func MakeSong(_ Song: MusicItem, _ VideoID: String, _ StartTime: Double) -> String {
     guard let VideoURL = GetYouTubeVideoURL(VideoID, true) else {
-        print("Failed to get video url!")
-        return
+        return "Failed to get video url!"
     }
-    EncodeAudio(MakeMetaData(Song.trackName, Song.artistName, Song.collectionName, GetYearFromDate(Song.releaseDate), Song.artworkUrl100.replacingOccurrences(of: "100x100bb.jpg", with: "1000x1000bb.png"), Song.primaryGenreName, Song.trackNumber), VideoURL.absoluteString, StartTime)
+    return EncodeAudio(MakeMetaData(Song.trackName, Song.artistName, Song.collectionName, GetYearFromDate(Song.releaseDate), Song.artworkUrl100.replacingOccurrences(of: "100x100bb.jpg", with: "1000x1000bb.png"), Song.primaryGenreName, Song.trackNumber), VideoURL.absoluteString, StartTime)
 }
 
 func MakeMetaData(_ Title: String, _ Artist: String, _ Album: String, _ Year: String, _ Artwork: String, _ Genre: String, _ TrackNumber: Int) -> [AVMetadataItem] {
@@ -35,14 +33,13 @@ func MakeMetaData(_ Title: String, _ Artist: String, _ Album: String, _ Year: St
     return [TitleItem, ArtistItem, ArtworkItem, YearItem, AlbumItem, GenreItem, TrackNumberItem]
 }
 
-func EncodeAudio(_ MetaData: [AVMetadataItem], _ URLString: String, _ StartTime: Double) {
+func EncodeAudio(_ MetaData: [AVMetadataItem], _ URLString: String, _ StartTime: Double) -> String {
     do {
         let SongName = MetaData.filter({$0.commonKey == .commonKeyTitle}).first?.stringValue ?? "Unknown"
         let Composition = AVMutableComposition()
         let Asset = AVURLAsset(url: URL(string: URLString)!)
         print("Creating Audio Asset Track...")
-        guard let AudioAssetTrack = Asset.tracks(withMediaType: AVMediaType.audio).first else { print("Can't get AudioAssetTrack!") 
-return }
+        guard let AudioAssetTrack = Asset.tracks(withMediaType: AVMediaType.audio).first else { print("Can't get AudioAssetTrack!") return }
         guard let AudioCompositionTrack = Composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) else { return }
         try AudioCompositionTrack.insertTimeRange(CMTimeRange(start: CMTime(seconds: StartTime, preferredTimescale: AudioAssetTrack.naturalTimeScale), end: Asset.duration), of: AudioAssetTrack, at: CMTime.zero)
         let OutputURL = URL(fileURLWithPath: "\(AppDataDir())/\(SongName).m4a")
@@ -55,15 +52,20 @@ return }
         ExportSession.metadata = MetaData
         var ShouldWait = true
         print("Exporting...")
+        let Semaphore = DispatchSemaphore(value: 0)
         ExportSession.exportAsynchronously {
+            defer {
+                Semaphore.signal()
+            }
             guard case ExportSession.status = AVAssetExportSession.Status.completed else { return }
             print("Done!")
             ShouldWait = false
         }
-        while ShouldWait {
-        }
+        Semaphore.wait()
+        return "Success!"
     } catch {
         print(error)
+        return error.localizedDescription
     }
 }
 

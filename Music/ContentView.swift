@@ -17,9 +17,14 @@ struct ContentView: View {
                                 textField.text = UIPasteboard.general.string ?? ""
                                 textField.placeholder = "Video ID"
                             })
+                            alert.addTextField(configurationHandler: { (textField) -> Void in
+                                textField.text = "0"
+                                textField.placeholder = "Start Time"
+                            })
                             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                             alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { [weak alert] (action) -> Void in
                                 let Video = ((alert?.textFields![0])! as UITextField).text ?? ""
+                                let StartTime = Double(((alert?.textFields![1])! as UITextField).text ?? "0") ?? 0
                                 
                             }))
                             UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.present(alert, animated: true)

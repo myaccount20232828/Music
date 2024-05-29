@@ -236,3 +236,116 @@ struct PlayerView: View {
         .navigationBarBackButtonHidden(true)
     }
 }
+
+class AudioPlayer {
+    var audioPlayer: AVAudioPlayer?
+    var nowPlayingInfo = [String: Any]()
+    var playbackTimer: Timer?
+    init() {
+        setupAudioSession()
+        setupRemoteTransportControls()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+    }
+    func playSong(_ Info: SongInfo) {
+        do {
+            try audioPlayer = SoundPlayer(Info.FilePath)
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.play()
+            setupNowPlayingInfo(Info)
+            startPlaybackTimer()
+        } catch {
+            print("Error playing audio: \(error.localizedDescription)")
+        }
+    }
+    func setupAudioSession() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.playback, mode: .default)
+            try audioSession.setActive(true)
+        } catch {
+            print("Error setting up audio session: \(error.localizedDescription)")
+        }
+    }
+    func setupNowPlayingInfo(_ Info: SongInfo) {
+        if let Title = Info.Title {
+            nowPlayingInfo[MPMediaItemPropertyTitle] = Title
+        }        
+        if let Artist = Info.Artist {
+            nowPlayingInfo[MPMediaItemPropertyArtist] = Artist
+        }
+        if let Artwork = Info.Artwork {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: artworkImage)
+
+        }
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer?.duration ?? 0
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    func startPlaybackTimer() {
+        playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateNowPlayingInfo()
+        }
+    }
+    func updateNowPlayingInfo() {
+        guard let audioPlayer = audioPlayer else { return }
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = audioPlayer.isPlaying ? 1.0 : 0.0
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    func togglePlayback() {
+        if audioPlayer?.isPlaying ?? false {
+            audioPlayer?.pause()
+        } else {
+            audioPlayer?.play()
+        }
+        updateNowPlayingInfo()
+    }
+    func skipForward() {
+        guard let audioPlayer = audioPlayer else { return }
+        var newTime = audioPlayer.currentTime + 10
+        if newTime > audioPlayer.duration {
+            newTime = audioPlayer.duration
+        }
+        audioPlayer.currentTime = newTime
+        updateNowPlayingInfo()
+    }
+    func skipBackward() {
+        guard let audioPlayer = audioPlayer else { return }
+        var newTime = audioPlayer.currentTime - 10
+        if newTime < 0 {
+            newTime = 0
+        }
+        audioPlayer.currentTime = newTime
+        updateNowPlayingInfo()
+    }
+    func setupRemoteTransportControls() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.pauseCommand.addTarget { [weak self] event in
+            guard let self = self else { return .commandFailed }
+            self.togglePlayback()
+            return .success
+        }
+        commandCenter.playCommand.addTarget { [weak self] event in
+            guard let self = self else { return .commandFailed }
+            self.togglePlayback()
+            return .success
+        }
+        commandCenter.skipBackwardCommand.addTarget { [weak self] event in
+            guard let self = self else { return .commandFailed }
+            self.skipBackward()
+            return .success
+        }
+        commandCenter.skipForwardCommand.addTarget { [weak self] event in
+            guard let self = self else { return .commandFailed }
+            self.skipForward()
+            return .success
+        }
+        commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
+            guard let self = self, let event = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
+            let newPositionTime = event.positionTime
+            self.audioPlayer?.currentTime = TimeInterval(newPositionTime)
+            self.updateNowPlayingInfo()
+            return .success
+        }
+    }
+}

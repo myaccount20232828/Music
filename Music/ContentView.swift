@@ -193,14 +193,6 @@ struct PlayerView: View {
             }
         }
         .onAppear {
-            do {
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowAirPlay])
-                print("Playback OK")
-                try AVAudioSession.sharedInstance().setActive(true)
-                print("Session is Active")
-            } catch {
-                print(error)
-            }
             AudioPlayer.shared.playSong(Info)
             Player = AudioPlayer.shared.audioPlayer
             DurationFull = Player?.duration ?? 0
@@ -250,6 +242,8 @@ class AudioPlayer {
     }
     func playSong(_ Info: SongInfo) {
         do {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = []
+            audioPlayer?.stop()
             try audioPlayer = SoundPlayer(Info.FilePath)
             audioPlayer?.prepareToPlay()
             audioPlayer?.play()

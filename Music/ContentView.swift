@@ -215,7 +215,7 @@ struct PlayerView: View {
                         Gray
                             .frame(width: 65, height: 25)
                             .cornerRadius(12)
-                       Text("Back")
+                       Text("Back 2")
                             .font(.system(size: 16, weight: .semibold, design: .rounded))
                             .foregroundColor(Color.white)
                     }
@@ -242,7 +242,7 @@ class AudioPlayer {
     }
     func playSong(_ Info: SongInfo) {
         do {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = []
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [:]
             audioPlayer?.stop()
             try audioPlayer = SoundPlayer(Info.FilePath)
             audioPlayer?.prepareToPlay()

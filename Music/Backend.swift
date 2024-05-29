@@ -1,13 +1,7 @@
 import Foundation
-import AVFoundation
+import AVKit
 
-func MakeSong(_ TrackID: String, _ VideoID: String, _ StartTime: Double) {
-    print("Getting song info...")
-    guard let Song = GetSongInfo(TrackID) else {
-        print("Failed to get song info!")
-        return
-    }
-    print("Got song info for \(Song.trackName)")
+func MakeSong(_ Song: MusicItem, _ VideoID: String, _ StartTime: Double) {
     print("Getting video URL...")
     guard let VideoURL = GetYouTubeVideoURL(VideoID, true) else {
         print("Failed to get video url!")

@@ -5,7 +5,6 @@ import Combine
 struct ContentView: View {
     @State var Songs: [MusicItem] = []
     @State var Search = ""
-    @State var DebounceCancellable: AnyCancellable? = nil
     var body: some View {
         ZStack {
             DarkGray
@@ -107,20 +106,19 @@ struct ContentView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .searchable(text: $Search)
-        .onChange(of: Search) { _ in
-            DebounceCancellable?.cancel()
+        .searchable(text: $Search) {
             if Search.isEmpty {
                 Songs = []
             } else {
-                DebounceCancellable = Just(Search)
-                .delay(for: .milliseconds(400), scheduler: RunLoop.main)
-                .sink { _ in
-                    DispatchQueue.global(qos: .utility).async {
-                        let NewSongs = SearchSongs(Search)
-                        Songs = NewSongs
-                    }
+                DispatchQueue.global(qos: .utility).async {
+                    let NewSongs = SearchSongs(Search)
+                    Songs = NewSongs
                 }
+            }
+        }
+        .onChange(of: Search) { _ in
+            if Search.isEmpty {
+                Songs = []
             }
         }
     }

@@ -25,7 +25,9 @@ struct ContentView: View {
                             alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { [weak alert] (action) -> Void in
                                 let Video = ((alert?.textFields![0])! as UITextField).text ?? ""
                                 let StartTime = Double(((alert?.textFields![1])! as UITextField).text ?? "0") ?? 0
-                                
+                                DispatchQueue.global(qos: .utility).async {
+                                    UIPasteboard.general.string = MakeSong(Song, Video, StartTime)
+                                }
                             }))
                             UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.present(alert, animated: true)
                         } label: {

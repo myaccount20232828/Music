@@ -82,7 +82,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 3")
+                    Text("Music 4")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -308,24 +308,6 @@ class MusicPlayer: ObservableObject {
         }
         UpdateNowPlayingInfo()
     }
-    func SkipForward() {
-        guard let Player = Player else { return }
-        var newTime = Player.currentTime + 10
-        if newTime > Player.duration {
-            newTime = Player.duration
-        }
-        Player.currentTime = newTime
-        UpdateNowPlayingInfo()
-    }
-    func SkipBackward() {
-        guard let Player = Player else { return }
-        var newTime = Player.currentTime - 10
-        if newTime < 0 {
-            newTime = 0
-        }
-        Player.currentTime = newTime
-        UpdateNowPlayingInfo()
-    }
     func SetupRemoteTransportControls() {
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.pauseCommand.addTarget { [weak self] event in
@@ -338,14 +320,14 @@ class MusicPlayer: ObservableObject {
             self.TogglePlayback()
             return .success
         }
-        commandCenter.skipBackwardCommand.addTarget { [weak self] event in
+        commandCenter.previousTrackCommand.addTarget { [weak self] event in
             guard let self = self else { return .commandFailed }
-            self.SkipBackward()
+            self.PlayPreviousSong()
             return .success
         }
-        commandCenter.skipForwardCommand.addTarget { [weak self] event in
+        commandCenter.nextTrackCommand.addTarget { [weak self] event in
             guard let self = self else { return .commandFailed }
-            self.SkipForward()
+            self.PlayNextSong()
             return .success
         }
         commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in

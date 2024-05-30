@@ -260,7 +260,7 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         if Success {
             switch Mode {
                 case .Shuffle: PlayRandomSong()
-                case .Repeat: Player?.play()
+                case .Repeat: Player.play()
                 case .Normal: PlayNextSong()
             }
         }

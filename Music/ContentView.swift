@@ -261,7 +261,7 @@ struct PlayerView: View {
     }
 }
 
-enum PlaybackMode {
+enum PlaybackMode: Int {
     case Shuffle = 1
     case Repeat
     case Normal

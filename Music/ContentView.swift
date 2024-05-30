@@ -27,7 +27,7 @@ struct ContentView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(MP.Mode == .Shuffle ? AppColor : .white)
                                 }
-                                .frame(width: 140, height: 50)
+                                .frame(width: 135, height: 50)
                                 .cornerRadius(15)
                             }
                             Button {
@@ -43,7 +43,24 @@ struct ContentView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
                                 }
-                                .frame(width: 140, height: 50)
+                                .frame(width: 135, height: 50)
+                                .cornerRadius(15)
+                            }
+                            Button {
+                                if MP.Mode == .Shuffle {
+                                    MP.PlayRandomSong()
+                                } else {
+                                    if let Song = Songs.first {
+                                        MP.PlaySong(Song)
+                                    }
+                                }
+                            } label: {
+                                ZStack {
+                                    Gray
+                                    Label("Play", systemImage: "play")
+                                    .font(.system(size: 20))
+                                }
+                                .frame(width: 135, height: 50)
                                 .cornerRadius(15)
                             }
                         }

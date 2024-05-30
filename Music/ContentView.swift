@@ -227,29 +227,29 @@ class MusicPlayer: ObservableObject {
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()
     func PlayNextSong() {
-        guard let currentIndex = songs.firstIndex(where: { $0 == song }) else {
+        guard let currentIndex = Songs.firstIndex(where: { $0 == Song }) else {
             return
         }
         let nextIndex: Int
-        if currentIndex == songs.count - 1 {
+        if currentIndex == Songs.count - 1 {
             nextIndex = 0
         } else {
             nextIndex = currentIndex + 1
         }
-        let nextSong = songs[nextIndex]
+        let nextSong = Songs[nextIndex]
         PlaySong(nextSong)
     }
     func PlayPreviousSong() {
-        guard let currentIndex = songs.firstIndex(where: { $0 == song }) else {
+        guard let currentIndex = Songs.firstIndex(where: { $0 == Song }) else {
             return
         }
         let previousIndex: Int
         if currentIndex == 0 {
-            previousIndex = songs.count - 1
+            previousIndex = Songs.count - 1
         } else {
             previousIndex = currentIndex - 1
         }
-        let previousSong = songs[previousIndex]
+        let previousSong = Songs[previousIndex]
         PlaySong(previousSong)
     }
     func PlaySong(_ Song: SongInfo) {

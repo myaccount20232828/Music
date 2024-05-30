@@ -262,7 +262,7 @@ struct PlayerView: View {
 }
 
 enum PlaybackMode {
-    case Shuffle
+    case Shuffle = 1
     case Repeat
     case Normal
 }
@@ -279,7 +279,7 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var Song: SongInfo?
     @Published var Player: AVAudioPlayer?
     @Published var Songs: [SongInfo] = []
-    @AppStorage("PlaybackMode") var StoredPlaybackMode: String = PlaybackMode.Normal.rawValue
+    @AppStorage("PlaybackMode") var StoredPlaybackMode = PlaybackMode.Normal.rawValue
     @Published var Mode: PlaybackMode {
         didSet {
             StoredPlaybackMode = Mode.rawValue

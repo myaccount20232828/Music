@@ -14,9 +14,19 @@ struct ContentView: View {
                     VStack {
                         Spacer()
                         Button {
-                            MP.Shuffle.toggle()
+                            MP.Mode = .Shuffle
                         } label: {
-                            Text("Shuffle: \(MP.Shuffle ? "On" : "Off")")
+                            Text("Shuffle: \(MP.Mode == .Shuffle ? "On" : "Off")")
+                        }
+                        Button {
+                            MP.Mode = .Repeat
+                        } label: {
+                            Text("Repeat: \(MP.Mode == .Repeat ? "On" : "Off")")
+                        }
+                        Button {
+                            MP.Mode = .Normal
+                        } label: {
+                            Text("Normal: \(MP.Mode == .Normal ? "On" : "Off")")
                         }
                         if let Song = MP.Song {
                             Button {
@@ -25,9 +35,7 @@ struct ContentView: View {
                                 Text(Song.Title ?? "Unknown")
                             }
                         }
-                        ForEach(MP.Songs.filter({
-                            ($0.Title?.contains(Search) ?? false) || ($0.Artist?.contains(Search) ?? false)
-                        }), id: \.self) { Song in
+                        ForEach(MP.Songs.filter({($0.Title?.contains(Search) ?? false) || ($0.Artist?.contains(Search) ?? false) || ($0.AlbumName?.contains(Search) ?? false)}), id: \.self) { Song in
                             Button {
                                 MP.PlaySong(Song)
                             } label: {
@@ -73,7 +81,7 @@ struct ContentView: View {
                                         }
                                         .padding(.horizontal, 14)
                                         if Song == MP.Song {
-                                            Text("Playing...")
+                                            Image(systemName: "play")
                                         }
                                     }
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -222,6 +230,12 @@ struct PlayerView: View {
     }
 }
 
+enum PlaybackMode {
+    case Shuffle
+    case Repeat
+    case Normal
+}
+
 class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     override init() {
         super.init()
@@ -233,7 +247,7 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var Song: SongInfo?
     @Published var Player: AVAudioPlayer?
     @Published var Songs: [SongInfo] = []
-    @Published var Shuffle = false
+    @Published var Mode: PlaybackMode = .Normal
     var NowPlayingInfo: [String: Any] = [:]
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()
@@ -244,10 +258,10 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     func audioPlayerDidFinishPlaying(_ Player: AVAudioPlayer, successfully Success: Bool) {
         if Success {
-            if Shuffle {
-                PlayRandomSong()
-            } else {
-                PlayNextSong()
+            switch Mode {
+                case .Shuffle: PlayRandomSong()
+                case .Repeat: Player?.play()
+                case .Normal: PlayNextSong()
             }
         }
     }

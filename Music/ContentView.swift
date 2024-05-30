@@ -347,7 +347,7 @@ class MusicPlayer: ObservableObject {
     }
     func UpdateSongs() {
         DispatchQueue.global(qos: .utility).async {
-            Songs = GetSongs()
+            self.Songs = GetSongs()
         }
     }
 }

@@ -138,7 +138,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 1")
+                    Text("Music 2")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -423,7 +423,10 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     func UpdateSongs() {
         DispatchQueue.global(qos: .utility).async {
-            self.Songs = GetSongs()
+            self.Songs = []
+            for Song in try FileManager.default.contentsOfDirectory(atPath: AppDataDir()).filter({$0.hasSuffix(".m4a")}) {
+                self.Songs.append(GetSongInfo("\(AppDataDir())/\(Song)"))
+            }
         }
     }
     func audioPlayerDidFinishPlaying(_ Player: AVAudioPlayer, successfully Success: Bool) {

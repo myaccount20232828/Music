@@ -105,7 +105,7 @@ struct ContentView: View {
                             Color.red
                             .edgesIgnoringSafeArea(.all)
                             HStack {
-                                Text(Song.name ?? "Unk")
+                                Text(Song.Title ?? "Unknown")
                             }
                         }
                         .frame(width: UIScreen.main.bounds.width, height: 50)
@@ -115,7 +115,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 11")
+                    Text("Music 12")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }

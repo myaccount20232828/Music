@@ -26,7 +26,7 @@ struct ContentView: View {
                             }
                         }
                         ForEach(MP.Songs.filter({
-                            $0.Title?.contains(Search) || $0.Artist?.contains(Search)
+                            ($0.Title?.contains(Search) ?? false) || ($0.Artist?.contains(Search) ?? false)
                         }), id: \.self) { Song in
                             Button {
                                 MP.PlaySong(Song)

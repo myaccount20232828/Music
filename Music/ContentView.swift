@@ -16,7 +16,6 @@ struct ContentView: View {
                         ForEach(Songs, id: \.self) { Song in
                             Button {
                                 MP.PlaySong(Song)
-                                //PlayerView(Info: Song)
                             } label: {
                                 ZStack {
                                     Gray
@@ -59,6 +58,9 @@ struct ContentView: View {
                                                 .lineLimit(1)
                                         }
                                         .padding(.horizontal, 14)
+                                        if Song == MP.Song {
+                                            Text("Playing...")
+                                        }
                                     }
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .offset(x: 10)

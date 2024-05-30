@@ -3,7 +3,6 @@ import AVKit
 import MediaPlayer
 
 struct ContentView: View {
-    @State var Songs: [SongInfo] = []
     @StateObject var MP = MusicPlayer.shared
     var body: some View {
         NavigationView {
@@ -13,7 +12,7 @@ struct ContentView: View {
                     VStack {
                         Spacer()
                         Text(MP.Song?.Title ?? "nil?")
-                        ForEach(Songs, id: \.self) { Song in
+                        ForEach(MP.Songs, id: \.self) { Song in
                             Button {
                                 MP.PlaySong(Song)
                             } label: {
@@ -76,7 +75,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music")
+                    Text("Music 2")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -103,12 +102,6 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
-        .onAppear {
-            DispatchQueue.global(qos: .utility).async {
-                print(AppDataDir())
-                Songs = GetSongs()
-            }
-        }
     }
 }
 
@@ -220,7 +213,7 @@ struct PlayerView: View {
                         Gray
                             .frame(width: 65, height: 25)
                             .cornerRadius(12)
-                       Text("Back 3")
+                       Text("Back")
                             .font(.system(size: 16, weight: .semibold, design: .rounded))
                             .foregroundColor(Color.white)
                     }
@@ -237,13 +230,15 @@ struct PlayerView: View {
 
 class MusicPlayer: ObservableObject {
     init() {
+        UpdateSongs()
         SetupAudioSession()
         SetupRemoteTransportControls()
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }
     @Published var Song: SongInfo?
     @Published var Player: AVAudioPlayer?
-    var NowPlayingInfo = [String: Any]()
+    @Published var Songs: [SongInfo] = []
+    var NowPlayingInfo: [String: Any] = [:]
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()
     func PlaySong(_ Song: SongInfo) {
@@ -348,6 +343,11 @@ class MusicPlayer: ObservableObject {
             self.Player?.currentTime = TimeInterval(newPositionTime)
             self.UpdateNowPlayingInfo()
             return .success
+        }
+    }
+    func UpdateSongs() {
+        DispatchQueue.global(qos: .utility).async {
+            Songs = GetSongs()
         }
     }
 }

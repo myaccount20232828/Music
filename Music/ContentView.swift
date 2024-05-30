@@ -35,7 +35,7 @@ struct ContentView: View {
                                 Text(Song.Title ?? "Unknown")
                             }
                         }
-                        ForEach(MP.Songs.filter({($0.Title?.contains(Search) ?? false) || ($0.Artist?.contains(Search) ?? false) || ($0.AlbumName?.contains(Search) ?? false)}), id: \.self) { Song in
+                        ForEach(MP.Songs.filter({(Search.isEmpty ? true : $0.Title?.contains(Search) ?? false) || ($0.Artist?.contains(Search) ?? false) || ($0.AlbumName?.contains(Search) ?? false)}), id: \.self) { Song in
                             Button {
                                 MP.PlaySong(Song)
                             } label: {
@@ -81,6 +81,7 @@ struct ContentView: View {
                                         }
                                         .padding(.horizontal, 14)
                                         if Song == MP.Song {
+                                            Spacer()
                                             Image(systemName: "play")
                                         }
                                     }
@@ -98,7 +99,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 9")
+                    Text("Music 10")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }

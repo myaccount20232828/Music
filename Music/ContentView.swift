@@ -12,7 +12,7 @@ struct ContentView: View {
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Spacer()
-                        Text(MP.Song?.description ?? "nil?")
+                        Text(MP.Song?.Title ?? "nil?")
                         ForEach(Songs, id: \.self) { Song in
                             Button {
                                 MP.PlaySong(Song)

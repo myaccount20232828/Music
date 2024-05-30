@@ -12,6 +12,11 @@ struct ContentView: View {
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Spacer()
+                        Button {
+                            MP.Shuffle.toggle()
+                        } label: {
+                            Text("Shuffle: \(MP.Shuffle ? "On" : "Off")")
+                        }
                         if let Song = MP.Song {
                             Button {
                                 ShowPlayer = true
@@ -82,7 +87,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 7")
+                    Text("Music 8")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -224,12 +229,22 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var Song: SongInfo?
     @Published var Player: AVAudioPlayer?
     @Published var Songs: [SongInfo] = []
+    @Published var Shuffle = false
     var NowPlayingInfo: [String: Any] = [:]
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if flag {
-            PlayNextSong()
+    func PlayRandomSong() {
+        if let Song = Songs.randomElement() {
+            PlaySong(Song)
+        }
+    }
+    func audioPlayerDidFinishPlaying(_ Player: AVAudioPlayer, successfully Success: Bool) {
+        if Success {
+            if Shuffle {
+                PlayRandomSong()
+            } else {
+                PlayNextSong()
+            }
         }
     }
     func PlaySong(_ Song: SongInfo) {

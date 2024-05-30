@@ -86,7 +86,7 @@ struct ContentView: View {
                                         }
                                     }
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.horizontal: 10)
+                                    .padding(.horizontal, 10)
                                     //.offset(x: 10)
                                 }
                                 .frame(width: UIScreen.main.bounds.width - 25, height: 87)

@@ -214,7 +214,8 @@ struct PlayerView: View {
 }
 
 class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
-    init() {
+    override init() {
+        super.init()
         UpdateSongs()
         SetupAudioSession()
         SetupRemoteTransportControls()

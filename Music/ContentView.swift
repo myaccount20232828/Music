@@ -269,8 +269,9 @@ enum PlaybackMode: Int {
 
 class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     override init() {
-        self.Mode = PlaybackMode(rawValue: StoredPlaybackMode) ?? .Normal
+        self.Mode = .Normal
         super.init()
+        self.Mode = PlaybackMode(rawValue: StoredPlaybackMode) ?? .Normal
         UpdateSongs()
         SetupAudioSession()
         SetupRemoteTransportControls()

@@ -329,7 +329,7 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             SetupNowPlayingInfo()
             StartPlaybackTimer()
         } catch {
-            print("Error playing audio: \(error.localizedDescription)")
+            print(error)
         }
     }
     func SetupAudioSession() {
@@ -338,7 +338,7 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             try AudioSession.setCategory(.playback, mode: .default)
             try AudioSession.setActive(true)
         } catch {
-            print("Error setting up audio session: \(error.localizedDescription)")
+            print(error)
         }
     }
     func SetupNowPlayingInfo() {
@@ -423,9 +423,13 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     func UpdateSongs() {
         DispatchQueue.global(qos: .utility).async {
-            self.Songs = []
-            for Song in try FileManager.default.contentsOfDirectory(atPath: AppDataDir()).filter({$0.hasSuffix(".m4a")}) {
-                self.Songs.append(GetSongInfo("\(AppDataDir())/\(Song)"))
+            do {
+                self.Songs = []
+                for Song in try FileManager.default.contentsOfDirectory(atPath: AppDataDir()).filter({$0.hasSuffix(".m4a")}) {
+                    self.Songs.append(GetSongInfo("\(AppDataDir())/\(Song)"))
+                }
+            } catch {
+                print(error)
             }
         }
     }

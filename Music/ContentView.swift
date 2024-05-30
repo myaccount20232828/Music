@@ -86,7 +86,8 @@ struct ContentView: View {
                                         }
                                     }
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .offset(x: 10)
+                                    .padding(.horizontal: 10)
+                                    //.offset(x: 10)
                                 }
                                 .frame(width: UIScreen.main.bounds.width - 25, height: 87)
                                 .cornerRadius(16)
@@ -99,7 +100,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 10")
+                    Text("Music 11")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -217,6 +218,7 @@ struct PlayerView: View {
             }
         }
         .onAppear {
+            IsPlaying = MP.Player?.isPlaying ?? false
             DurationFull = MP.Player?.duration ?? 0
             CurrentDuration = MP.Player?.currentTime ?? 0
             RemainingDuratation = DurationFull - CurrentDuration

@@ -5,6 +5,7 @@ import MediaPlayer
 struct ContentView: View {
     @StateObject var MP = MusicPlayer.shared
     @State var ShowPlayer = false
+    @State var Search = ""
     var body: some View {
         NavigationView {
             ZStack {
@@ -24,7 +25,9 @@ struct ContentView: View {
                                 Text(Song.Title ?? "Unknown")
                             }
                         }
-                        ForEach(MP.Songs, id: \.self) { Song in
+                        ForEach(MP.Songs.filter({
+                            $0.Title?.contains(Search) || $0.Artist?.contains(Search)
+                        }), id: \.self) { Song in
                             Button {
                                 MP.PlaySong(Song)
                             } label: {
@@ -87,7 +90,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 8")
+                    Text("Music 9")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -114,6 +117,7 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
+        .searchable(text: $Search)
         .sheet(isPresented: $ShowPlayer) {
             PlayerView()
         }

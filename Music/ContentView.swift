@@ -13,20 +13,27 @@ struct ContentView: View {
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Spacer()
-                        Button {
-                            MP.Mode = .Shuffle
-                        } label: {
-                            Text("Shuffle: \(MP.Mode == .Shuffle ? "On" : "Off")")
-                        }
-                        Button {
-                            MP.Mode = .Repeat
-                        } label: {
-                            Text("Repeat: \(MP.Mode == .Repeat ? "On" : "Off")")
-                        }
-                        Button {
-                            MP.Mode = .Normal
-                        } label: {
-                            Text("Normal: \(MP.Mode == .Normal ? "On" : "Off")")
+                        HStack {
+                            Button {
+                                if MP.Mode == .Shuffle {
+                                    MP.Mode = .Normal
+                                } else {
+                                    MP.Mode = .Shuffle
+                                }
+                            } label: {
+                                Text("Shuffle")
+                                .foregroundColor(MP.Mode == .Shuffle ? .red : .white)
+                            }
+                            Button {
+                                if MP.Mode == .Repeat {
+                                    MP.Mode = .Normal
+                                } else {
+                                    MP.Mode = .Repeat
+                                }
+                            } label: {
+                                Text("Repeat")
+                                .foregroundColor(MP.Mode == .Repeat ? .red : .white)
+                            }
                         }
                         if let Song = MP.Song {
                             Button {

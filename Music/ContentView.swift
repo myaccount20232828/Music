@@ -89,8 +89,9 @@ struct ContentView: View {
                                     .padding(.horizontal, 10)
                                     //.offset(x: 10)
                                 }
-                                .frame(width: UIScreen.main.bounds.width - 25, height: 87)
+                                .frame(width: UIScreen.main.bounds.width - 25, height: 100)
                                 .cornerRadius(16)
+                                .frame(maxHeight: .infinity, alignment: .bottom)
                             }
                             .buttonStyle(.plain)
                         }
@@ -155,7 +156,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 13")
+                    Text("Music 14")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }

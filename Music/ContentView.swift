@@ -138,7 +138,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music")
+                    Text("Music 1")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -322,7 +322,7 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             self.Song = Song
             MPNowPlayingInfoCenter.default().nowPlayingInfo = [:]
             Player?.stop()
-            try Player = SoundPlayer(Song.FilePath)
+            try Player = AVAudioPlayer(data: FileManager.default.contents(atPath: Song.FilePath)!)
             Player?.delegate = self
             Player?.prepareToPlay()
             Player?.play()

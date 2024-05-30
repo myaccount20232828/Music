@@ -13,7 +13,7 @@ struct AddMusicView: View {
             ScrollView(showsIndicators: false) {
                 VStack {
                     Spacer()
-                    ForEach(Songs.sorted(by: {$0.trackName.levenshteinDistanceScore(to: Search) > $1.trackName.levenshteinDistanceScore(to: Search)})) { Song in
+                    ForEach(Songs) { Song in
                         Button {
                             let Alert = UIAlertController(title: "Video ID", message: "Put in the YouTube Video ID here.", preferredStyle: .alert)
                             Alert.addTextField(configurationHandler: { (TextField) -> Void in
@@ -132,7 +132,7 @@ struct AddMusicView: View {
         .searchable(text: $Search)
         .onSubmit(of: .search) {
             DispatchQueue.global(qos: .utility).async {
-                Songs = SearchSongs(Search)
+                Songs = SearchSongs(Search).sorted(by: {$0.trackName.levenshteinDistanceScore(to: Search) > $1.trackName.levenshteinDistanceScore(to: Search)})
             }
         }
         .onChange(of: Search) { _ in

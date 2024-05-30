@@ -21,8 +21,8 @@ struct ContentView: View {
                                     MP.Mode = .Shuffle
                                 }
                             } label: {
-                                Image(systemName: "shuffle")
-                                .font(.system(size: 45))
+                                Label("Shuffle", systemImage: "shuffle")
+                                .font(.system(size: 35))
                                 .foregroundColor(MP.Mode == .Shuffle ? AppColor : .white)
                             }
                             Button {
@@ -32,8 +32,8 @@ struct ContentView: View {
                                     MP.Mode = .Repeat
                                 }
                             } label: {
-                                Image(systemName: "repeat")
-                                .font(.system(size: 45))
+                                Label("Repeat", systemImage: "repeat")
+                                .font(.system(size: 35))
                                 .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
                             }
                         }

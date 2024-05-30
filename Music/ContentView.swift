@@ -80,7 +80,7 @@ struct ContentView: View {
                                                 .lineLimit(1)
                                         }
                                         .padding(.horizontal, 14)
-                                        if Song == MP.Song {
+                                        if Song.FilePath == MP.Song?.FilePath {
                                             Spacer()
                                             Image(systemName: "play")
                                         }
@@ -244,6 +244,7 @@ struct PlayerView: View {
         .onReceive(Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()) { time in
             withAnimation {
                 IsPlaying = MP.Player?.isPlaying ?? false
+                DurationFull = MP.Player?.duration ?? 0
                 CurrentDuration = MP.Player?.currentTime ?? 0
                 RemainingDuratation = DurationFull - CurrentDuration
             }

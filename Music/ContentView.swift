@@ -102,20 +102,60 @@ struct ContentView: View {
                         ShowPlayer = true
                     } label: {
                         ZStack {
-                            Color.red
-                            .edgesIgnoringSafeArea(.all)
+                            Gray
                             HStack {
-                                Text(Song.Title ?? "Unknown")
+                                if Song.Artwork == nil {
+                                    ZStack {
+                                        LightGray
+                                            .frame(width: 67, height: 67)
+                                            .cornerRadius(12)
+                                        Gray
+                                            .frame(width: 65, height: 65)
+                                            .cornerRadius(12)
+                                        DarkGray
+                                            .opacity(0.5)
+                                            .frame(width: 30, height: 30)
+                                            .clipShape(Circle())
+                                        Image(systemName: "play")
+                                            .font(.system(size: 18, weight: .semibold, design: .rounded))
+                                            .foregroundColor(Color.white)
+                                    }
+                                } else {
+                                    ZStack {
+                                        Gray
+                                            .frame(width: 67, height: 67)
+                                            .cornerRadius(12)
+                                        Image(uiImage: Song.Artwork ?? UIImage())
+                                           .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: 67, height: 67)
+                                            .cornerRadius(12)
+                                    }
+                                }
+                                VStack(alignment: .leading) {
+                                    Text(Song.Title ?? "Unknown")
+                                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                                        .lineLimit(2)
+                                    Text(Song.Artist ?? "Unknown")
+                                        .foregroundColor(Gray2)
+                                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                                        .lineLimit(1)
+                                }
+                                .padding(.horizontal, 14)
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 10)
                         }
-                        .frame(width: UIScreen.main.bounds.width, height: 50)
+                        .frame(width: UIScreen.main.bounds.width , height: 87)
+                        .cornerRadius(16)
                         .frame(maxHeight: .infinity, alignment: .bottom)
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 12")
+                    Text("Music 13")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }

@@ -231,23 +231,25 @@ struct PlayerView: View {
 }
 
 class MusicPlayer {
-    var Player: AVAudioPlayer?
-    var NowPlayingInfo = [String: Any]()
-    var PlaybackTimer: Timer?
-    static let shared = MusicPlayer()
     init() {
         SetupAudioSession()
         SetupRemoteTransportControls()
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }
-    func PlaySong(_ Info: SongInfo) {
+    var Song: SongInfo?
+    var Player: AVAudioPlayer?
+    var NowPlayingInfo = [String: Any]()
+    var PlaybackTimer: Timer?
+    static let shared = MusicPlayer()
+    func PlaySong(_ Song: SongInfo) {
         do {
+            self.Song = Song
             MPNowPlayingInfoCenter.default().nowPlayingInfo = [:]
             Player?.stop()
-            try audioPlayer = SoundPlayer(Info.FilePath)
+            try Player = SoundPlayer(Song.FilePath)
             Player?.prepareToPlay()
             Player?.play()
-            SetupNowPlayingInfo(Info)
+            SetupNowPlayingInfo()
             StartPlaybackTimer()
         } catch {
             print("Error playing audio: \(error.localizedDescription)")
@@ -262,14 +264,14 @@ class MusicPlayer {
             print("Error setting up audio session: \(error.localizedDescription)")
         }
     }
-    func SetupNowPlayingInfo(_ Info: SongInfo) {
-        if let Title = Info.Title {
+    func SetupNowPlayingInfo() {
+        if let Title = Song?.Title {
             NowPlayingInfo[MPMediaItemPropertyTitle] = Title
         }        
-        if let Artist = Info.Artist {
+        if let Artist = Song?.Artist {
             NowPlayingInfo[MPMediaItemPropertyArtist] = Artist
         }
-        if let Artwork = Info.Artwork {
+        if let Artwork = Song?.Artwork {
             NowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: Artwork)
         }
         NowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = Player?.duration ?? 0

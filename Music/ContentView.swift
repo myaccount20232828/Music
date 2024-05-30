@@ -129,6 +129,9 @@ struct ContentView: View {
         }
         .navigationViewStyle(.stack)
         .searchable(text: $Search)
+        .refreshable {
+            MP.UpdateSongs()
+        }
         .sheet(isPresented: $ShowPlayer) {
             PlayerView()
         }
@@ -269,20 +272,6 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var NowPlayingInfo: [String: Any] = [:]
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()
-    func PlayRandomSong() {
-        if let Song = Songs.randomElement() {
-            PlaySong(Song)
-        }
-    }
-    func audioPlayerDidFinishPlaying(_ Player: AVAudioPlayer, successfully Success: Bool) {
-        if Success {
-            switch Mode {
-                case .Shuffle: PlayRandomSong()
-                case .Repeat: Player.play()
-                case .Normal: PlayNextSong()
-            }
-        }
-    }
     func PlaySong(_ Song: SongInfo) {
         do {
             self.Song = Song
@@ -352,6 +341,11 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }        
         PlaySong(Songs[CurrentIndex == 0 ? Songs.count - 1 : CurrentIndex - 1])
     }
+    func PlayRandomSong() {
+        if let Song = Songs.randomElement() {
+            PlaySong(Song)
+        }
+    }
     func SetupRemoteTransportControls() {
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.pauseCommand.addTarget { [weak self] event in
@@ -385,6 +379,15 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func UpdateSongs() {
         DispatchQueue.global(qos: .utility).async {
             self.Songs = GetSongs()
+        }
+    }
+    func audioPlayerDidFinishPlaying(_ Player: AVAudioPlayer, successfully Success: Bool) {
+        if Success {
+            switch Mode {
+                case .Shuffle: PlayRandomSong()
+                case .Repeat: Player.play()
+                case .Normal: PlayNextSong()
+            }
         }
     }
 }

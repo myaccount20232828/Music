@@ -97,6 +97,21 @@ struct ContentView: View {
                         Spacer()
                     }
                 }
+                if let Song = MP.Song {
+                    Button {
+                        ShowPlayer = true
+                    } label: {
+                        ZStack {
+                            Color.red
+                            .edgesIgnoringSafeArea(.all)
+                            HStack {
+                                Text(Song.name ?? "Unk")
+                            }
+                        }
+                        .frame(width: UIScreen.main.bounds.width, height: 50)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                    }
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {

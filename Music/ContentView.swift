@@ -27,7 +27,7 @@ struct ContentView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(MP.Mode == .Shuffle ? AppColor : .white)
                                 }
-                                .frame(width: 125, height: 50)
+                                .frame(width: 120, height: 50)
                                 .cornerRadius(15)
                             }
                             Button {
@@ -43,7 +43,7 @@ struct ContentView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
                                 }
-                                .frame(width: 125, height: 50)
+                                .frame(width: 120, height: 50)
                                 .cornerRadius(15)
                             }
                             Button {
@@ -57,10 +57,10 @@ struct ContentView: View {
                             } label: {
                                 ZStack {
                                     Gray
-                                    Label("Play", systemImage: "play")
+                                    Label("Play", systemImage: "play.fill")
                                     .font(.system(size: 20))
                                 }
-                                .frame(width: 125, height: 50)
+                                .frame(width: 120, height: 50)
                                 .cornerRadius(15)
                             }
                         }

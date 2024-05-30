@@ -82,7 +82,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 5")
+                    Text("Music 6")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -213,7 +213,7 @@ struct PlayerView: View {
     }
 }
 
-class MusicPlayer: ObservableObject {
+class MusicPlayer: ObservableObject, AVAudioPlayerDelegate {
     init() {
         UpdateSongs()
         SetupAudioSession()
@@ -226,6 +226,11 @@ class MusicPlayer: ObservableObject {
     var NowPlayingInfo: [String: Any] = [:]
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if flag {
+            PlayNextSong()
+        }
+    }
     func PlaySong(_ Song: SongInfo) {
         do {
             self.Song = Song

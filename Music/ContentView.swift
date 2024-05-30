@@ -27,7 +27,7 @@ struct ContentView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(MP.Mode == .Shuffle ? AppColor : .white)
                                 }
-                                .frame(width: 135, height: 50)
+                                .frame(width: 125, height: 50)
                                 .cornerRadius(15)
                             }
                             Button {
@@ -43,7 +43,7 @@ struct ContentView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
                                 }
-                                .frame(width: 135, height: 50)
+                                .frame(width: 125, height: 50)
                                 .cornerRadius(15)
                             }
                             Button {
@@ -60,10 +60,11 @@ struct ContentView: View {
                                     Label("Play", systemImage: "play")
                                     .font(.system(size: 20))
                                 }
-                                .frame(width: 135, height: 50)
+                                .frame(width: 125, height: 50)
                                 .cornerRadius(15)
                             }
                         }
+                        .buttonStyle(.plain)
                         if let Song = MP.Song {
                             Button {
                                 ShowPlayer = true

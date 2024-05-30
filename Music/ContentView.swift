@@ -22,7 +22,8 @@ struct ContentView: View {
                                 }
                             } label: {
                                 Image(systemName: "shuffle")
-                                .foregroundColor(MP.Mode == .Shuffle ? .red : .white)
+                                .font(.system(size: 45))
+                                .foregroundColor(MP.Mode == .Shuffle ? AppColor : .white)
                             }
                             Button {
                                 if MP.Mode == .Repeat {
@@ -32,7 +33,8 @@ struct ContentView: View {
                                 }
                             } label: {
                                 Image(systemName: "repeat")
-                                .foregroundColor(MP.Mode == .Repeat ? .red : .white)
+                                .font(.system(size: 45))
+                                .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
                             }
                         }
                         if let Song = MP.Song {
@@ -108,7 +110,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 18")
+                    Text("Music")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }

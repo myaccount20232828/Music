@@ -27,7 +27,7 @@ struct ContentView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(MP.Mode == .Shuffle ? AppColor : .white)
                                 }
-                                .frame(width: 70, height: 40)
+                                .frame(width: 140, height: 50)
                             }
                             Button {
                                 if MP.Mode == .Repeat {
@@ -36,9 +36,13 @@ struct ContentView: View {
                                     MP.Mode = .Repeat
                                 }
                             } label: {
-                                Label("Repeat", systemImage: "repeat")
-                                .font(.system(size: 20))
-                                .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
+                                ZStack {
+                                    Gray
+                                    Label("Repeat", systemImage: "repeat")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
+                                }
+                                .frame(width: 140, height: 50)
                             }
                         }
                         if let Song = MP.Song {

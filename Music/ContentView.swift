@@ -101,7 +101,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 15")
+                    Text("Music 16")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -202,7 +202,7 @@ struct PlayerView: View {
                     }
                 }
                 .padding(30)
-                HStack {
+                HStack(spacing: 10) {
                     Button {
                         withAnimation {
                             MP.PlayPreviousSong()
@@ -225,7 +225,7 @@ struct PlayerView: View {
                             MP.PlayNextSong()
                         }
                     } label: {
-                        Image(systemName: "foward.fill")
+                        Image(systemName: "forward.fill")
                             .font(.system(size: 45))
                     }
                 }

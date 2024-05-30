@@ -82,7 +82,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 4")
+                    Text("Music 5")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -226,32 +226,6 @@ class MusicPlayer: ObservableObject {
     var NowPlayingInfo: [String: Any] = [:]
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()
-    func PlayNextSong() {
-        guard let currentIndex = Songs.firstIndex(where: { $0 == Song }) else {
-            return
-        }
-        let nextIndex: Int
-        if currentIndex == Songs.count - 1 {
-            nextIndex = 0
-        } else {
-            nextIndex = currentIndex + 1
-        }
-        let nextSong = Songs[nextIndex]
-        PlaySong(nextSong)
-    }
-    func PlayPreviousSong() {
-        guard let currentIndex = Songs.firstIndex(where: { $0 == Song }) else {
-            return
-        }
-        let previousIndex: Int
-        if currentIndex == 0 {
-            previousIndex = Songs.count - 1
-        } else {
-            previousIndex = currentIndex - 1
-        }
-        let previousSong = Songs[previousIndex]
-        PlaySong(previousSong)
-    }
     func PlaySong(_ Song: SongInfo) {
         do {
             self.Song = Song
@@ -307,6 +281,18 @@ class MusicPlayer: ObservableObject {
             Player?.play()
         }
         UpdateNowPlayingInfo()
+    }
+    func PlayNextSong() {
+        guard let CurrentIndex = Songs.firstIndex(where: { $0 == Song }) else {
+            return
+        }
+        PlaySong(Songs[CurrentIndex == Songs.count - 1 ? 0 : CurrentIndex + 1])
+    }
+    func PlayPreviousSong() {
+        guard let CurrentIndex = Songs.firstIndex(where: { $0 == Song }) else {
+            return
+        }        
+        PlaySong(Songs[CurrentIndex == 0 ? Songs.count - 1 : CurrentIndex - 1])
     }
     func SetupRemoteTransportControls() {
         let commandCenter = MPRemoteCommandCenter.shared()

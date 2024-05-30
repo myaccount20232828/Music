@@ -82,7 +82,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Music 2")
+                    Text("Music 3")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(Color.white)
                 }
@@ -109,14 +109,13 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
-        .fullScreenCover(isPresented: $ShowPlayer) {
+        .sheey(isPresented: $ShowPlayer) {
             PlayerView()
         }
     }
 }
 
 struct PlayerView: View {
-    @Environment(\.presentationMode) var presentationMode
     @StateObject var MP = MusicPlayer.shared
     @State var IsPlaying = false
     @State var CurrentDuration: Double = 0
@@ -204,34 +203,13 @@ struct PlayerView: View {
             CurrentDuration = MP.Player?.currentTime ?? 0
             RemainingDuratation = DurationFull - CurrentDuration
         }
-        .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { time in
+        .onReceive(Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()) { time in
             withAnimation {
                 IsPlaying = MP.Player?.isPlaying ?? false
                 CurrentDuration = MP.Player?.currentTime ?? 0
                 RemainingDuratation = DurationFull - CurrentDuration
             }
         }
-        .navigationBarItems(
-            leading:
-                Button {
-                    presentationMode.wrappedValue.dismiss()
-                } label: {
-                    ZStack {
-                        Gray
-                            .frame(width: 65, height: 25)
-                            .cornerRadius(12)
-                       Text("Back")
-                            .font(.system(size: 16, weight: .semibold, design: .rounded))
-                            .foregroundColor(Color.white)
-                    }
-                }
-            ,
-            trailing:
-                Color.clear
-                .frame(width: 65, height: 25)
-        )
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
     }
 }
 

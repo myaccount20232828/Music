@@ -4,6 +4,7 @@ import MediaPlayer
 
 struct ContentView: View {
     @StateObject var MP = MusicPlayer.shared
+    @State var ShowPlayer = false
     var body: some View {
         NavigationView {
             ZStack {
@@ -11,7 +12,13 @@ struct ContentView: View {
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Spacer()
-                        Text(MP.Song?.Title ?? "nil?")
+                        if let Song = MP.Song {
+                            Button {
+                                ShowPlayer = true
+                            } label: {
+                                Text(Song.Title ?? "Unknown")
+                            }
+                        }
                         ForEach(MP.Songs, id: \.self) { Song in
                             Button {
                                 MP.PlaySong(Song)
@@ -102,14 +109,16 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
+        .fullScreenCover(isPresented: $ShowPlayer) {
+            PlayerView()
+        }
     }
 }
 
 struct PlayerView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State var Player: AVAudioPlayer? = nil
+    @StateObject var MP = MusicPlayer.shared
     @State var IsPlaying = false
-    @State var Info: SongInfo
     @State var CurrentDuration: Double = 0
     @State var RemainingDuratation: Double = 0
     @State var DurationFull: Double = 0
@@ -122,7 +131,7 @@ struct PlayerView: View {
                 ZStack {
                     Color.clear
                         .frame(width: UIScreen.main.bounds .width - 60, height: UIScreen.main.bounds .width - 60)
-                    if let Artwork = Info.Artwork {
+                    if let Artwork = MP.Song?.Artwork {
                         Image(uiImage: Artwork)
                             .resizable()
                             .frame(width: IsPlaying ? UIScreen.main.bounds .width - 60 : UIScreen.main.bounds .width - 140, height: IsPlaying ? UIScreen.main.bounds .width - 60 : UIScreen.main.bounds .width - 140)
@@ -134,11 +143,11 @@ struct PlayerView: View {
                             .cornerRadius(15)
                     }
                 }
-                Text(Info.Title ?? "Unknown Title")
+                Text(MP.Song?.Title ?? "Unknown Title")
                     .fontWeight(.semibold)
                     .font(.system(size: 20))
                 if ShowAlbumName {
-                    Text(Info.AlbumName ?? "Unknown Album Name")
+                    Text(MP.Song?.AlbumName ?? "Unknown Album Name")
                         .fontWeight(.semibold)
                         .opacity(0.5)
                         .onAppear {
@@ -149,7 +158,7 @@ struct PlayerView: View {
                             }
                         }
                 } else {
-                    Text(Info.Artist ?? "Unknown Artist")
+                    Text(MP.Song?.Artist ?? "Unknown Artist")
                         .fontWeight(.semibold)
                         .opacity(0.5)
                         .onAppear {
@@ -177,11 +186,11 @@ struct PlayerView: View {
                 Button {
                     withAnimation {
                         if IsPlaying {
-                            Player?.pause()
+                            MP.Player?.pause()
                         } else {
-                            Player?.play()
+                            MP.Player?.play()
                         }
-                        IsPlaying = Player?.isPlaying ?? false
+                        IsPlaying = MP.Player?.isPlaying ?? false
                     }
                 } label: {
                     Image(systemName: IsPlaying ? "pause.fill" : "play.fill")
@@ -191,16 +200,14 @@ struct PlayerView: View {
             }
         }
         .onAppear {
-            MusicPlayer.shared.PlaySong(Info)
-            Player = MusicPlayer.shared.Player
-            DurationFull = Player?.duration ?? 0
-            CurrentDuration = Player?.currentTime ?? 0
+            DurationFull = MP.Player?.duration ?? 0
+            CurrentDuration = MP.Player?.currentTime ?? 0
             RemainingDuratation = DurationFull - CurrentDuration
         }
         .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { time in
             withAnimation {
-                IsPlaying = Player?.isPlaying ?? false
-                CurrentDuration = Player?.currentTime ?? 0
+                IsPlaying = MP.Player?.isPlaying ?? false
+                CurrentDuration = MP.Player?.currentTime ?? 0
                 RemainingDuratation = DurationFull - CurrentDuration
             }
         }

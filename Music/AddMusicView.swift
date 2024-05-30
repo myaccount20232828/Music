@@ -32,7 +32,9 @@ struct AddMusicView: View {
                                 DispatchQueue.global(qos: .utility).async {
                                     ShowAlert(UIAlertController(title: "Creating \(Song.trackName)", message: "", preferredStyle: .alert))
                                     let Result = MakeSong(Song, Video, StartTime)
-                                    if Result != "Success" {
+                                    if Result == "Success" {
+                                        MusicPlayer.shared.UpdateSongs()
+                                    } else {
                                         Thread.sleep(forTimeInterval: 0.3)
                                     }
                                     Dismiss()

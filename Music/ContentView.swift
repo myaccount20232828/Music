@@ -22,7 +22,7 @@ struct ContentView: View {
                                 }
                             } label: {
                                 Label("Shuffle", systemImage: "shuffle")
-                                .font(.system(size: 35))
+                                .font(.system(size: 25))
                                 .foregroundColor(MP.Mode == .Shuffle ? AppColor : .white)
                             }
                             Button {
@@ -33,7 +33,7 @@ struct ContentView: View {
                                 }
                             } label: {
                                 Label("Repeat", systemImage: "repeat")
-                                .font(.system(size: 35))
+                                .font(.system(size: 25))
                                 .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
                             }
                         }
@@ -270,6 +270,7 @@ enum PlaybackMode {
 class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     override init() {
         super.init()
+        self.Mode = PlaybackMode(rawValue: StoredPlaybackMode) ?? .Normal
         UpdateSongs()
         SetupAudioSession()
         SetupRemoteTransportControls()
@@ -278,7 +279,12 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var Song: SongInfo?
     @Published var Player: AVAudioPlayer?
     @Published var Songs: [SongInfo] = []
-    @Published var Mode: PlaybackMode = .Normal
+    @AppStorage("PlaybackMode") var StoredPlaybackMode: String = PlaybackMode.Normal.rawValue
+    @Published var Mode: PlaybackMode {
+        didSet {
+            StoredPlaybackMode = Mode.rawValue
+        }
+    }
     var NowPlayingInfo: [String: Any] = [:]
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()

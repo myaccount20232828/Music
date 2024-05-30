@@ -4,7 +4,7 @@ import MediaPlayer
 
 struct ContentView: View {
     @State var Songs: [SongInfo] = []
-    @StateObject var MusicPlayer = MusicPlayer.shared
+    @StateObject var MP = MusicPlayer.shared
     var body: some View {
         NavigationView {
             ZStack {
@@ -12,10 +12,10 @@ struct ContentView: View {
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Spacer()
-                        Text(MusicPlayer.Song?.description ?? "nil?")
+                        Text(MP.Song?.description ?? "nil?")
                         ForEach(Songs, id: \.self) { Song in
                             Button {
-                                MusicPlayer.PlaySong(Song)
+                                MP.PlaySong(Song)
                                 //PlayerView(Info: Song)
                             } label: {
                                 ZStack {

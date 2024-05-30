@@ -233,14 +233,14 @@ struct PlayerView: View {
     }
 }
 
-class MusicPlayer {
+class MusicPlayer: ObservableObject {
     init() {
         SetupAudioSession()
         SetupRemoteTransportControls()
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }
-    var Song: SongInfo?
-    var Player: AVAudioPlayer?
+    @Published var Song: SongInfo?
+    @Published var Player: AVAudioPlayer?
     var NowPlayingInfo = [String: Any]()
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()

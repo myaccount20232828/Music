@@ -109,7 +109,7 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
-        .sheey(isPresented: $ShowPlayer) {
+        .sheet(isPresented: $ShowPlayer) {
             PlayerView()
         }
     }
@@ -226,6 +226,32 @@ class MusicPlayer: ObservableObject {
     var NowPlayingInfo: [String: Any] = [:]
     var PlaybackTimer: Timer?
     static let shared = MusicPlayer()
+    func PlayNextSong() {
+        guard let currentIndex = songs.firstIndex(where: { $0 == song }) else {
+            return
+        }
+        let nextIndex: Int
+        if currentIndex == songs.count - 1 {
+            nextIndex = 0
+        } else {
+            nextIndex = currentIndex + 1
+        }
+        let nextSong = songs[nextIndex]
+        PlaySong(nextSong)
+    }
+    func PlayPreviousSong() {
+        guard let currentIndex = songs.firstIndex(where: { $0 == song }) else {
+            return
+        }
+        let previousIndex: Int
+        if currentIndex == 0 {
+            previousIndex = songs.count - 1
+        } else {
+            previousIndex = currentIndex - 1
+        }
+        let previousSong = songs[previousIndex]
+        PlaySong(previousSong)
+    }
     func PlaySong(_ Song: SongInfo) {
         do {
             self.Song = Song

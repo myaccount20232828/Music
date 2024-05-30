@@ -185,13 +185,24 @@ func GetSongs() -> [SongInfo] {
 }
 
 func GetSongInfo(_ FilePath: String) -> SongInfo {
-    let Asset = AVAsset(url: URL(fileURLWithPath: FilePath))
-    let AlbumName = Asset.getMetadataItem(.commonKeyAlbumName) as? String       
-    let Title = Asset.getMetadataItem(.commonKeyTitle) as? String       
-    let Artist = Asset.getMetadataItem(.commonKeyArtist) as? String
-    var Artwork: UIImage? = nil
-    if let ArtworkData = Asset.getMetadataItem(.commonKeyArtwork) as? Data {
-        Artwork = UIImage(data: ArtworkData)
+    let AVItems = AVPlayerItem(url: URL(fileURLWithPath: FilePath)).asset.commonMetadata
+    var Artwork: UIImage?
+    var Title: String?
+    var Artist: String?
+    var AlbumName: String?
+    for item in AVItems {
+        if item.commonKey == .commonKeyTitle {
+            Title = item.stringValue
+        }
+        if item.commonKey == .commonKeyArtist {
+            Artist = item.stringValue
+        }
+        if item.commonKey == .commonKeyArtwork {
+            Artwork = UIImage(data: item.value as! Data) ?? UIImage()
+        }
+        if item.commonKey == .commonKeyAlbumName {
+            AlbumName = item.stringValue
+        }
     }
     return SongInfo(Artwork: Artwork, Title: Title, Artist: Artist, AlbumName: AlbumName, FilePath: FilePath)
 }
@@ -202,12 +213,6 @@ struct SongInfo: Hashable {
     var Artist: String?
     var AlbumName: String?
     var FilePath: String
-}
-
-extension AVAsset {
-    func getMetadataItem(_ Key: AVMetadataKey) -> Any? {
-        return self.commonMetadata.first(where: {$0.commonKey == Key})?.value
-    }
 }
 
 func SoundPlayer(_ FilePath: String) -> AVAudioPlayer? {

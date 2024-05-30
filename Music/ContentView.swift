@@ -213,7 +213,7 @@ struct PlayerView: View {
     }
 }
 
-class MusicPlayer: ObservableObject, AVAudioPlayerDelegate {
+class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     init() {
         UpdateSongs()
         SetupAudioSession()

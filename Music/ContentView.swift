@@ -28,6 +28,7 @@ struct ContentView: View {
                                     .foregroundColor(MP.Mode == .Shuffle ? AppColor : .white)
                                 }
                                 .frame(width: 140, height: 50)
+                                .cornerRadius(15)
                             }
                             Button {
                                 if MP.Mode == .Repeat {
@@ -43,6 +44,7 @@ struct ContentView: View {
                                     .foregroundColor(MP.Mode == .Repeat ? AppColor : .white)
                                 }
                                 .frame(width: 140, height: 50)
+                                .cornerRadius(15)
                             }
                         }
                         if let Song = MP.Song {

@@ -50,7 +50,7 @@ struct ContentView: View {
                                 if MP.Mode == .Shuffle {
                                     MP.PlayRandomSong()
                                 } else {
-                                    if let Song = Songs.first {
+                                    if let Song = MP.Songs.first {
                                         MP.PlaySong(Song)
                                     }
                                 }
